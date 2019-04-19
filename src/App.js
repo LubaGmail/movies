@@ -3,22 +3,14 @@ import './App.css';
 import Movies from './components/movies';
 
 class App extends Component {
-  state = {
-   
-  };
+  state = {};
   
   render() {
     return (
       <main className='container'>
-        <Movies
-          
-        />
-      </main>
+        <Movies />     
+       </main>
     );
-  }
-
-  handleDelete = (movie) => {
-
   }
 }
 

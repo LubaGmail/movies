@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
 import Like from './common/like';
+import Pagination from './common/pagination';
+import {paginate} from '../utils/paginate';
 
 class Movies extends Component {
     state = {  
-        movies: getMovies() 
+        movies: getMovies(),
+        pageSize: 4,
+        currentPage: 1  
     }
+
     render() { 
         const {length: count} = this.state.movies;
+        const {movies: allMovies, pageSize, currentPage} = this.state;
+        
+        const movies = paginate(allMovies, currentPage, pageSize);
+
 
         if (count === 0) return <h3>No movies</h3>
-
+    
         return (
             <div>
                 <h3>
-                    Showing {count} in the dB
+                   Movies
                 </h3>
 
                 <table className="table table-striped">
@@ -30,7 +39,7 @@ class Movies extends Component {
                     </thead>
 
                     <tbody >
-                    {this.state.movies.map(movie => (
+                    {movies.map(movie => (
                         <tr  key={movie._id}>
                             <td>{ movie.title }</td>
                             <td>{ movie.genre.name }</td>
@@ -45,15 +54,27 @@ class Movies extends Component {
                                 <button onClick={(movie) => this.handleDelete(movie)}
                                     style={{cursor: 'pointer'}}
                                     className='btn btn-danger btn-small'>
-                                     Delete</button>
+                                     Delete
+                                </button>
                             </td>
                         </tr>
                     ))}
                  
                     </tbody>
                 </table>
+
+                <Pagination 
+                    itemsCount={count}
+                    pageSize={pageSize}
+                    onPageChange={this.handlePageChange}
+                    currentPage={currentPage}
+                />
             </div>
         );
+    }
+
+    handlePageChange = (page) => {
+        this.setState({currentPage: page});
     }
 
     handleLike = (movie) => {
